@@ -1,4 +1,5 @@
 from google.adk.agents.llm_agent import LlmAgent
+from .schemas import UserProfile
 
 # --- Sequential flow commented out (navigator handled by teammate) ---
 # from google.adk.agents.sequential_agent import SequentialAgent
@@ -16,6 +17,7 @@ root_agent = LlmAgent(
     model="gemini-2.5-flash",
     description="Collects user career information and produces a structured profile JSON for the navigator.",
     output_key="profile_json",
+    # output_schema=UserProfile,
     instruction="""
 You are a career profiler. Your goal is to collect enough information from the user to fill
 the profile JSON below, then output it exactly.
@@ -23,7 +25,7 @@ the profile JSON below, then output it exactly.
 ## Your process
 1. Greet the user and start collecting information conversationally.
 2. If they provide a resume/CV PDF path, call parse_pdf(file_path) to extract text and use it.
-3. Ask at most 5 questions at a time. Be friendly, supportive, and non-judgmental.
+3. Ask at most 3 questions at a time. Be friendly, supportive, and non-judgmental.
 4. Cover all fields needed for the output JSON:
    - domain (e.g. software, healthcare, design, finance, trades, etc.)
    - goal (what they want to achieve)
@@ -38,6 +40,8 @@ the profile JSON below, then output it exactly.
    - resources_access (e.g. internet, laptop, library, online courses)
    - preferences.learning_style (e.g. visual, hands-on, reading, video)
    - preferences.intensity (low | medium | high)
+5. Questions should not be direct choose this or this. For example you should not directly ask are you beginner, or expert. You should make a friendly conversion and based on that make anylisys. 
+6. Dont include fix set of question based on above data.
 
 ## When you have collected all required information
 Output ONLY the following JSON with no extra text, no markdown, no explanation:
