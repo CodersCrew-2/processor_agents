@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Literal
+from typing import Literal, Optional
 
 class Preferences(BaseModel):
     learning_style: str
@@ -18,3 +18,18 @@ class UserProfile(BaseModel):
     constraints: list[str]
     resources_access: list[str]
     preferences: Preferences
+
+class Question(BaseModel):
+    id: str
+    text: str
+    input_type: Literal["text", "number", "radio", "dropdown", "multiselect"]
+    options: Optional[list[str]] = None
+    required: bool = True
+
+class QuestionResponse(BaseModel):
+    message: str
+    questions: list[Question]
+
+class AgentResponse(BaseModel):
+    type: Literal["question", "result"]
+    data: QuestionResponse | UserProfile
